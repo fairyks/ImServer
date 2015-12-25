@@ -28,7 +28,7 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
  */
 
 public class ChatClient {
-	static final String HOST = System.getProperty("host", "192.168.1.103");
+	static final String HOST = System.getProperty("host", "192.168.1.10");
 	static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
 
 	public static void main(String[] args) throws Exception {
