@@ -4,6 +4,7 @@
 package org.fairyks.im.server;
 
 import org.fairyks.im.server.initializer.ServerInitializer;
+import org.fairyks.im.server.util.ConfigReader;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -28,7 +29,7 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 public class SeverStarter {
 	
-	static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
+	static final int PORT = Integer.parseInt(System.getProperty("port", ConfigReader.getValue("config.properties", "IM_SERVER_PORT")));
 
     public static void main(String[] args) throws Exception {
         SelfSignedCertificate ssc = new SelfSignedCertificate();

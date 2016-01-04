@@ -4,6 +4,8 @@
 package org.fairyks.im.server.handler;
 
 import java.net.InetAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,6 +33,9 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 
 	static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
+	//处理登录，登录用户名和远程地址组成map
+	Map<String, Channel> map = new ConcurrentHashMap<String,Channel>();
+	
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx) {
 		// Once session is secured, send a greeting and register the channel to the global channel
@@ -38,11 +43,13 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 		ctx.pipeline().get(SslHandler.class).handshakeFuture()
 				.addListener(new GenericFutureListener<Future<Channel>>() {
 					public void operationComplete(Future<Channel> future) throws Exception {
-						ctx.writeAndFlush(
-								"Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
-						ctx.writeAndFlush("Your session is protected by "
-								+ ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite()
-								+ " cipher suite.\n");
+//						ctx.writeAndFlush(
+//								"Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
+//						ctx.writeAndFlush("Your session is protected by "
+//								+ ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite()
+//								+ " cipher suite.\n");
+						
+						map.put(ctx.channel().remoteAddress().toString(), ctx.channel());
 
 						channels.add(ctx.channel());
 					}
@@ -54,12 +61,14 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 		// Send the received message to all channels but the current one.
 		for (Channel c : channels) {
 			if (c != ctx.channel()) {
+//				map.get(ctx.channel().remoteAddress()).writeAndFlush("[" + ctx.channel().remoteAddress() + "] " + msg + '\n');
 				c.writeAndFlush("[" + ctx.channel().remoteAddress() + "] " + msg + '\n');
-			} else {
+			} 
+			/*else {
 				c.writeAndFlush(ctx.channel().remoteAddress()+ "说" + msg + '\n');
 				System.out.println(ctx.channel().remoteAddress());
 //				System.out.println(ctx.channel().id());
-			}
+			}*/
 		}
 
 		// Close the connection if the client has sent 'bye'.
