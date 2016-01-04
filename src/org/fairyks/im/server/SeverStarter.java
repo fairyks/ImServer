@@ -3,6 +3,7 @@
  */
 package org.fairyks.im.server;
 
+import org.fairyks.im.server.http.HttpServerStarter;
 import org.fairyks.im.server.initializer.ServerInitializer;
 import org.fairyks.im.server.util.ConfigReader;
 
@@ -38,6 +39,9 @@ public class SeverStarter {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
+        	
+        	HttpServerStarter.getInstance().startHttpServer();
+        	 
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)

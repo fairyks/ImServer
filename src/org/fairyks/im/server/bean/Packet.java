@@ -17,4 +17,70 @@ package org.fairyks.im.server.bean;
 
 public class Packet {
 
+	private String type;
+	private String message;
+	private String from;
+	private String to;
+	private String msgId;
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	/**
+	 * @return the from
+	 */
+	public String getFrom() {
+		return from;
+	}
+	/**
+	 * @param from the from to set
+	 */
+	public void setFrom(String from) {
+		this.from = from;
+	}
+	/**
+	 * @return the to
+	 */
+	public String getTo() {
+		return to;
+	}
+	/**
+	 * @param to the to to set
+	 */
+	public void setTo(String to) {
+		this.to = to;
+	}
+	/**
+	 * @return the msgId
+	 */
+	public String getMsgId() {
+		return msgId;
+	}
+	/**
+	 * @param msgId the msgId to set
+	 */
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	}
+	
 }

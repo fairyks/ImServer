@@ -29,6 +29,7 @@ import com.google.gson.Gson;
  * @author <a href=" ">陈延军</a>
  */
 @WebServlet(urlPatterns = { "/syncAction" }, asyncSupported = true)
+//@WebServlet("/syncAction")
 public class SyncServlet extends HttpServlet {
 
 	/** 
@@ -56,7 +57,7 @@ public class SyncServlet extends HttpServlet {
 		
 		
 		// deal business
-		HttpResponseUtils.renderJson(response, "");
+		HttpResponseUtils.renderJson(response, gson.toJson(packet));
 	}
 
 }

@@ -56,7 +56,7 @@ public class HttpServerStarter {
 			servletContextHandler.setContextPath("/imServer");
 			     
 		    /**可在下面依次添加多个servlet**/
-		    servletContextHandler.addServlet(new ServletHolder(new SyncServlet()), "/syncPacket");
+		    servletContextHandler.addServlet(new ServletHolder(new SyncServlet()), "/syncAction");
 		    
 		    HandlerList handlers = new HandlerList();
 		    handlers.addHandler(servletContextHandler);

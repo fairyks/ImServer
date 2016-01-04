@@ -47,11 +47,11 @@ public class HttpResponseUtils {
 	 * @throws IOException 
 	 */
 	public static void renderJson(HttpServletResponse response, String text) throws IOException {
-		if (ConfigReader.is_encrypt.equals("true")) {
-			render(response, "application/json;charset=UTF-8", ZipUtils.compress(text));
-		} else {
+//		if (ConfigReader.is_encrypt.equals("true")) {
+//			render(response, "application/json;charset=UTF-8", ZipUtils.compress(text));
+//		} else {
 			render(response, "application/json;charset=UTF-8", text);
-		}
+//		}
 
 	}
 
