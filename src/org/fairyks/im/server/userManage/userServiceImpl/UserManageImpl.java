@@ -3,14 +3,16 @@
  */
 package org.fairyks.im.server.userManage.userServiceImpl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.fairyks.im.server.bean.User;
-import org.fairyks.im.server.db.DBOperator;
-import org.fairyks.im.server.db.DataRepositoryFactory;
-import org.fairyks.im.server.db.IDataRepository;
+import org.fairyks.im.server.db.DBUtilConnectionManager;
 import org.fairyks.im.server.userManage.userService.UserManageService;
+import org.fairyks.im.server.util.UserNameGenerator;
 
 /**
  * <p>Copyright: Copyright (c) 2011</p>
@@ -36,21 +38,29 @@ public class UserManageImpl implements UserManageService {
 	 */
 	@Override
 	public boolean registerUser(User user) {
-		IDataRepository dataRepository = null;
-		DBOperator dBOperator = null;
-		ResultSet rs = null;
-		String token = null;
+		boolean flag = false;
+		Connection connection = null;
+	    PreparedStatement preparedStatement = null;
 		String sql = "INSERT INTO im_user (user_name,plain_password,nick_name,creation_date,modification_date) VALUES (?,?,?,?,?)";
 		try {
-			dataRepository = DataRepositoryFactory.getInstance().getDataRepository("IMPool");
-			dBOperator = dataRepository.getDBOperator();
-			rs = dBOperator.executeQuery(sql.toString());
+			connection = DBUtilConnectionManager.getInstance().getDBconnection();
+			connection.setAutoCommit(false);
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, user.getUserName());
+			preparedStatement.setString(2, user.getPlainPassword());
+			preparedStatement.setString(3, user.getNickName());
+			preparedStatement.setString(4, user.getCreationdate());
+			preparedStatement.setString(5, user.getModificationDate());
+			preparedStatement.execute();
+			connection.commit();
+			flag = true;
 		} catch (Exception e) {
 			logger.error("register user " + sql + "  /error", e);
+			flag = false;
 		} finally {
-//			closeConnDB(dataRepository);
+			DBUtilConnectionManager.getInstance().close(connection, preparedStatement, null);
 		}
-		return false;
+		return flag;
 	}
 
 	/**
@@ -58,14 +68,31 @@ public class UserManageImpl implements UserManageService {
 	 * @see org.fairyks.im.server.userManage.userService.UserManageService#findUserByUserNameAndPassWord(java.lang.String, java.lang.String)
 	 * @param userName
 	 * @param password
-	 * @return
+	 * @return String
 	 * @throws 
 	 */
 	@Override
-	public boolean findUserByUserNameAndPassWord(String userName, String password) {
-		
-		
-		return false;
+	public String findUserByUserNameAndPassWord(String userName, String password) {
+		String nick_name = null;
+		Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+		String sql = "select nick_name from im_user where user_name = ? and plain_password = ?";
+		try {
+			connection = DBUtilConnectionManager.getInstance().getDBconnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, userName);
+			preparedStatement.setString(2, password);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				nick_name = resultSet.getString("nick_name");
+			}
+		} catch (Exception e) {
+			logger.error("register user " + sql + "  /error", e);
+		} finally {
+			DBUtilConnectionManager.getInstance().close(connection, preparedStatement, null);
+		}
+		return nick_name;
 	}
 
 }

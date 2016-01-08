@@ -23,6 +23,7 @@ public class User {
 	private String nickName;
 	private String creationdate;
 	private String modificationDate;
+	private String type;
 	/**
 	 * @description
 	 * <p>TODO</p>
@@ -32,9 +33,10 @@ public class User {
 	 * @param nickName
 	 * @param creationdate
 	 * @param modificationDate
+	 * @param type
 	 */
 	public User(String userName, String plainPassword, String encryptedPassword, String nickName, String creationdate,
-			String modificationDate) {
+			String modificationDate,String type) {
 		super();
 		this.userName = userName;
 		this.plainPassword = plainPassword;
@@ -42,6 +44,7 @@ public class User {
 		this.nickName = nickName;
 		this.creationdate = creationdate;
 		this.modificationDate = modificationDate;
+		this.type = type;
 	}
 	/**
 	 * @return the userName
@@ -115,5 +118,16 @@ public class User {
 	public void setModificationDate(String modificationDate) {
 		this.modificationDate = modificationDate;
 	}
-	
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
 }

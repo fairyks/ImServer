@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean>
+		<moduleName>syncAction</moduleName>
+		<path>org.fairyks.im.server.http.SyncServlet</path>
+	</bean>
+	<bean>
+		<moduleName>userManageAction</moduleName>
+		<path>org.fairyks.im.server.http.UserManageServlet</path>
+	</bean>
+</beans>

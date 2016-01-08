@@ -34,7 +34,7 @@ public interface UserManageService {
 	 * @param password 密码
 	 * @return true:成功;false:失败
 	 */
-	public boolean findUserByUserNameAndPassWord(String userName,String password);
+	public String findUserByUserNameAndPassWord(String userName,String password);
 	
 	
 }

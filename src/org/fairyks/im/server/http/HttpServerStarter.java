@@ -3,6 +3,8 @@
  */
 package org.fairyks.im.server.http;
 
+import javax.servlet.http.HttpServlet;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -10,6 +12,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.fairyks.im.server.util.ConfigReader;
+import org.fairyks.im.server.util.LoadServletModule;
 
 /**
  * <p>Copyright: Copyright (c) 2011</p>
@@ -39,8 +42,9 @@ public class HttpServerStarter {
 	}
 	
 	public void startHttpServer(){
-	
-		try {
+		
+		try{
+			
 			ResourceHandler resourceHandler = new ResourceHandler();
 		    resourceHandler.setDirectoriesListed(true);
 		    resourceHandler.setResourceBase("data");
@@ -54,9 +58,15 @@ public class HttpServerStarter {
 			//添加servlet支持
 			ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 			servletContextHandler.setContextPath("/imServer");
+			
+			 LoadServletModule.getInstance().init();
+			 for (String key : LoadServletModule.getServletModulePool().keySet()) {
+				   servletContextHandler.addServlet(new ServletHolder((HttpServlet) Class.forName(LoadServletModule.getServletModulePool().get(key)).newInstance()),  "/"+key);
+				  }
 			     
 		    /**可在下面依次添加多个servlet**/
-		    servletContextHandler.addServlet(new ServletHolder(new SyncServlet()), "/syncAction");
+//		    servletContextHandler.addServlet(new ServletHolder(new SyncServlet()), "/syncAction");
+//		    servletContextHandler.addServlet(new ServletHolder(new UserManageServlet()), "/userManageAction");
 		    
 		    HandlerList handlers = new HandlerList();
 		    handlers.addHandler(servletContextHandler);
@@ -72,7 +82,9 @@ public class HttpServerStarter {
 		   connector.setPort(hosts);     
 		   // 为服务设置连接器     
 		   server.setConnectors(new Connector[] { connector }); 
-	*/	    server.setHandler(handlers);
+		   */	
+//	    server.setHandler(servletContextHandler);
+	    server.setHandler(handlers);
 			server.start();
 			server.join(); 
 		} catch (Exception e) {
