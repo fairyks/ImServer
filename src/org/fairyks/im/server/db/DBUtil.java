@@ -29,7 +29,6 @@ static ComboPooledDataSource cpds = null;
     static{  
         //加载c3p0连接池配置  
 //        System.setProperty("com.mchange.v2.c3p0.cfg.xml","c3p0-config.xml");  
-        //这里有个优点，写好配置文件，想换数据库
         cpds = new ComboPooledDataSource("mysql");//这是oracle数据库  
 //      cpds = new ComboPooledDataSource("mysql");//这是mysql数据库  
     }  

@@ -46,7 +46,7 @@ public class HttpRequestUtil {
 		try {
 			request.setCharacterEncoding("UTF-8");
 			InputStream inputStream = request.getInputStream();
-			String requestData = IOUtils.toString(inputStream);
+			String requestData = IOUtils.toString(inputStream,"Utf-8");
 			return requestData;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -71,7 +71,7 @@ public class UserManageServlet extends HttpServlet {
 		Gson gson = new Gson();
 		ResponseBean bean = new ResponseBean();
 		UserManageService userManageService = new UserManageImpl();
-		String userData = HttpRequestUtil.getInstance().getRequestData(request);
+		String userData = HttpRequestUtil.getRequestData(request);
 		User user = gson.fromJson(userData, User.class);
 		switch (user.getType()) {
 		case "addUser":
