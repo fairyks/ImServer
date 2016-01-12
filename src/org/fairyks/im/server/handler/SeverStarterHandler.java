@@ -3,9 +3,10 @@
  */
 package org.fairyks.im.server.handler;
 
-import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.fairyks.im.server.UserInfoCache;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,9 +34,6 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 
 	static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-	//处理登录，登录用户名和远程地址组成map
-	Map<String, Channel> map = new ConcurrentHashMap<String,Channel>();
-	
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx) {
 		// Once session is secured, send a greeting and register the channel to the global channel
@@ -43,15 +41,18 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 		ctx.pipeline().get(SslHandler.class).handshakeFuture()
 				.addListener(new GenericFutureListener<Future<Channel>>() {
 					public void operationComplete(Future<Channel> future) throws Exception {
+//						System.out.println("Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
 //						ctx.writeAndFlush(
 //								"Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
 //						ctx.writeAndFlush("Your session is protected by "
 //								+ ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite()
 //								+ " cipher suite.\n");
 						
-						map.put(ctx.channel().remoteAddress().toString(), ctx.channel());
+						UserInfoCache.getConnectedclient().put(ctx.channel().remoteAddress().toString(), ctx.channel());
 
 						channels.add(ctx.channel());
+						
+						//要加入上线通知功能
 					}
 				});
 	}
@@ -70,6 +71,8 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 //				System.out.println(ctx.channel().id());
 			}*/
 		}
+		
+		//接卸msg的协议，根据情况，进行消息转发
 
 		// Close the connection if the client has sent 'bye'.
 		if ("bye".equals(msg.toLowerCase())) {

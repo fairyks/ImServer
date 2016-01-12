@@ -39,9 +39,7 @@ public class SeverStarter {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-        	
-        	HttpServerStarter.getInstance().startHttpServer();
-        	 
+        	new Thread(new HttpServerStarter()).start();
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
