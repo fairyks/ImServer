@@ -3,8 +3,7 @@
  */
 package org.fairyks.im.server.handler;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.net.InetAddress;
 
 import org.fairyks.im.server.UserInfoCache;
 
@@ -41,7 +40,7 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 		ctx.pipeline().get(SslHandler.class).handshakeFuture()
 				.addListener(new GenericFutureListener<Future<Channel>>() {
 					public void operationComplete(Future<Channel> future) throws Exception {
-//						System.out.println("Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
+						System.out.println("Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
 //						ctx.writeAndFlush(
 //								"Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
 //						ctx.writeAndFlush("Your session is protected by "
