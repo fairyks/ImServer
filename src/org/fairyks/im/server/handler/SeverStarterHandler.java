@@ -64,10 +64,6 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 	
 	@Override
 	public void messageReceived(ChannelHandlerContext context, String message) throws Exception {
-//		messageService  = new MessageServiceImpl();
-//		gson = new Gson();
-//		MessageService messageService  = new MessageServiceImpl();
-//		Gson gson = new Gson();
 		try {
 //			for (Channel channel : channels) {
 //			if (channel != context.channel()) {
@@ -79,13 +75,13 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 //			channels.find(context.channel().id()).writeAndFlush(context.channel().remoteAddress()+ "说" +message+"1");
 //			channels.find(context.channel().id()).writeAndFlush(context.channel().remoteAddress()+ "说");
 			
-			//只有这种方式可以发送数据，不知道是fuck什么原因
+			// 发送数据时,必须在最后加上回车符号"/n",类似这种格式
+//			channels.find(context.channel().id()).writeAndFlush(gson.toJson(packet) + "\n");
 //			channels.find(context.channel().id()).writeAndFlush(context.channel().remoteAddress()+ "说" + message + "\n");
-
 //			channel.writeAndFlush(context.channel().remoteAddress()+ "说" + message + '\n');
 //			}
 //		}
-//			channels.find(context.channel().id()).writeAndFlush(new String("hello,world"));
+			
 		//msg的协议，根据情况，进行消息转发
 		Packet packet = gson.fromJson(message, Packet.class);
 		switch (packet.getType()) {
@@ -100,7 +96,7 @@ public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 			Packet resultPacket = new Packet();
 			resultPacket.setList(result);
 			resultPacket.setType(MessageProtocal.IQ_SEARCH_FRIEND);
-			channels.find(context.channel().id()).writeAndFlush(context.channel().remoteAddress()+ "说" + gson.toJson(packet) + "\n");
+			channels.find(context.channel().id()).writeAndFlush(gson.toJson(packet) + "\n");
 			break;
 		case MessageProtocal.IQ_ADD_FRIEND:
 			
