@@ -3,6 +3,8 @@
  */
 package org.fairyks.im.server.userManage.userService;
 
+import java.util.List;
+
 import org.fairyks.im.server.bean.User;
 
 /**
@@ -35,6 +37,13 @@ public interface UserManageService {
 	 * @return true:成功;false:失败
 	 */
 	public String findUserByUserNameAndPassWord(String userName,String password);
+
+	/**
+	 * 方法描述 : 搜索用户,供添加好友使用
+	 * @param userAccount
+	 * @return
+	 */
+	public List<User> searchNewFriend(String userAccount);
 	
 	
 }

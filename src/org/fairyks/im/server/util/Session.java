@@ -1,12 +1,13 @@
 /**
  * Copyright  陈延军 All rights reserved.
  */
-package org.fairyks.im.server;
+package org.fairyks.im.server.util;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelId;
 
 /**
  * <p>Copyright: Copyright (c) 2011</p>
@@ -20,10 +21,11 @@ import io.netty.channel.Channel;
  * @author <a href=" ">陈延军</a>
  */
 
-public class UserInfoCache {
+public class Session {
 	
 	//处理登录，登录用户名和远程地址组成map
 	private static final Map<String, Channel> connectedClient = new ConcurrentHashMap<String,Channel>();
+	private static final Map<String, ChannelId> connectedClientId = new ConcurrentHashMap<String,ChannelId>();
 
 	/**
 	 * @return the connectedclient
@@ -31,5 +33,14 @@ public class UserInfoCache {
 	public static Map<String, Channel> getConnectedclient() {
 		return connectedClient;
 	}
+
+	/**
+	 * @return the connectedclientid
+	 */
+	public static Map<String, ChannelId> getConnectedclientid() {
+		return connectedClientId;
+	}
+	
+	
 		
 }

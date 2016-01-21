@@ -6,6 +6,8 @@ package org.fairyks.im.server.userManage.userServiceImpl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,7 +30,8 @@ import org.fairyks.im.server.util.UserNameGenerator;
 
 public class UserManageImpl implements UserManageService {
 
-	private static Logger logger = Logger.getLogger(UserManageImpl.class);  
+	private static Logger logger = Logger.getLogger(UserManageImpl.class);
+
 	/**
 	 * <h4>  </h4>
 	 * @see org.fairyks.im.server.userManage.userService.UserManageService#registerUser(org.fairyks.im.server.bean.User)
@@ -40,7 +43,7 @@ public class UserManageImpl implements UserManageService {
 	public boolean registerUser(User user) {
 		boolean flag = false;
 		Connection connection = null;
-	    PreparedStatement preparedStatement = null;
+		PreparedStatement preparedStatement = null;
 		String sql = "INSERT INTO im_user (user_name,plain_password,nick_name,creation_date,modification_date) VALUES (?,?,?,?,?)";
 		try {
 			connection = DBUtilConnectionManager.getInstance().getDBconnection();
@@ -75,8 +78,8 @@ public class UserManageImpl implements UserManageService {
 	public String findUserByUserNameAndPassWord(String userName, String password) {
 		String nick_name = null;
 		Connection connection = null;
-	    PreparedStatement preparedStatement = null;
-	    ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		String sql = "select nick_name from im_user where user_name = ? and plain_password = ?";
 		try {
 			connection = DBUtilConnectionManager.getInstance().getDBconnection();
@@ -93,6 +96,40 @@ public class UserManageImpl implements UserManageService {
 			DBUtilConnectionManager.getInstance().close(connection, preparedStatement, null);
 		}
 		return nick_name;
+	}
+
+	/**
+	 * <h4>  </h4>
+	 * @see org.fairyks.im.server.userManage.userService.UserManageService#searchNewFriend(java.lang.String)
+	 * @param userAccount
+	 * @return
+	 * @throws 
+	 */
+	@Override
+	public List<User> searchNewFriend(String userAccount) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		String sql = "select user_name, nick_name from im_user where user_name = ? or nick_name = ?";
+		List<User> list = new ArrayList<User>();
+		try {
+			connection = DBUtilConnectionManager.getInstance().getDBconnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, userAccount);
+			preparedStatement.setString(2, userAccount);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				User user = new User();
+				user.setUserName(resultSet.getString("user_name"));
+				user.setNickName(resultSet.getString("nick_name"));
+				list.add(user);
+			}
+		} catch (Exception e) {
+			logger.error("search user " + sql + "  /error", e);
+		} finally {
+			DBUtilConnectionManager.getInstance().close(connection, preparedStatement, null);
+		}
+		return list;
 	}
 
 }

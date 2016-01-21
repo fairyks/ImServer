@@ -5,7 +5,7 @@ package org.fairyks.im.server.handler;
 
 import java.net.InetAddress;
 
-import org.fairyks.im.server.UserInfoCache;
+import org.fairyks.im.server.util.Session;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -32,53 +32,87 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 public class SeverStarterHandler extends SimpleChannelInboundHandler<String> {
 
 	static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
+//	static MessageService messageService  = null;
+//	static Gson gson = null;
+//	static{
+//		messageService  = new MessageServiceImpl();
+//		gson = new Gson();
+//	}
+	
 	@Override
-	public void channelActive(final ChannelHandlerContext ctx) {
-		// Once session is secured, send a greeting and register the channel to the global channel
-		// list so the channel received the messages from others.
-		ctx.pipeline().get(SslHandler.class).handshakeFuture()
+	public void channelActive(final ChannelHandlerContext context) {
+		context.pipeline().get(SslHandler.class).handshakeFuture()
 				.addListener(new GenericFutureListener<Future<Channel>>() {
 					public void operationComplete(Future<Channel> future) throws Exception {
 						System.out.println("Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
-//						ctx.writeAndFlush(
-//								"Welcome to " + InetAddress.getLocalHost().getHostName() + " chat service!\n");
-//						ctx.writeAndFlush("Your session is protected by "
-//								+ ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite()
-//								+ " cipher suite.\n");
-						
-						UserInfoCache.getConnectedclient().put(ctx.channel().remoteAddress().toString(), ctx.channel());
-
-						channels.add(ctx.channel());
-						
-						//要加入上线通知功能
+						Session.getConnectedclientid().put(context.channel().remoteAddress().toString(), context.channel().id());
+						System.out.println(context.channel().id().toString());
+						channels.add(context.channel());
+						//TODO: 要加入上线通知功能
 					}
 				});
 	}
 
+	
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
-		// Send the received message to all channels but the current one.
-		for (Channel c : channels) {
-			if (c != ctx.channel()) {
-//				map.get(ctx.channel().remoteAddress()).writeAndFlush("[" + ctx.channel().remoteAddress() + "] " + msg + '\n');
-				c.writeAndFlush("[" + ctx.channel().remoteAddress() + "] " + msg + '\n');
-			} 
-			/*else {
-				c.writeAndFlush(ctx.channel().remoteAddress()+ "说" + msg + '\n');
-				System.out.println(ctx.channel().remoteAddress());
-//				System.out.println(ctx.channel().id());
-			}*/
-		}
-		
-		//接卸msg的协议，根据情况，进行消息转发
+	public void messageReceived(ChannelHandlerContext context, String message) throws Exception {
+//		messageService  = new MessageServiceImpl();
+//		gson = new Gson();
+//		MessageService messageService  = new MessageServiceImpl();
+//		Gson gson = new Gson();
+//		try {
+//			for (Channel channel : channels) {
+//			if (channel != context.channel()) {
+//				channel.writeAndFlush("[" + context.channel().remoteAddress() + "] " + message + '\n');
+//			} else {
+//				String id = context.channel().id().toString();
+//			System.out.println(context.channel().id().toString());
+//			channels.find(context.channel().id()).writeAndFlush(message);
+//			channels.find(context.channel().id()).writeAndFlush(context.channel().remoteAddress()+ "说" +message+"1");
+			channels.find(context.channel().id()).writeAndFlush(context.channel().remoteAddress()+ "说");
+			
+			//只有这种方式可以发送数据，不知道是fuck什么原因
+//			channels.find(context.channel().id()).writeAndFlush(context.channel().remoteAddress()+ "说" + message + "\n");
 
-		// Close the connection if the client has sent 'bye'.
-		if ("bye".equals(msg.toLowerCase())) {
-			ctx.close();
-		}
+//			channel.writeAndFlush(context.channel().remoteAddress()+ "说" + message + '\n');
+//			}
+//		}
+//			channels.find(context.channel().id()).writeAndFlush(new String("hello,world"));
+		//msg的协议，根据情况，进行消息转发
+//		Packet packet = gson.fromJson(message, Packet.class);
+//		switch (packet.getType()) {
+//		case MessageProtocal.PRESENCE_ONLINE:
+//			
+//			break;
+//		case MessageProtocal.PRESENCE_OFFLINE:
+//			
+//			break;
+//		case MessageProtocal.IQ_SEARCH_FRIEND:
+//			List<User> result = messageService.searchNewFriend(packet.getTo());
+//			Packet resultPacket = new Packet();
+//			resultPacket.setList(result);
+//			resultPacket.setType(MessageProtocal.IQ_SEARCH_FRIEND);
+//			sendMessage(context, message);
+//			break;
+//		case MessageProtocal.IQ_ADD_FRIEND:
+//			
+//			break;
+//		case MessageProtocal.IQ_DELETE_FRIEND:
+//			
+//			break;
+//		case MessageProtocal.CHAT:
+//			break;
+//		case MessageProtocal.GROUP_CHAT:
+//			break;
+//		default:
+//			break;
+//		}
+//		
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
-
+	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		cause.printStackTrace();

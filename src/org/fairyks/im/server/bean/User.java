@@ -24,6 +24,11 @@ public class User {
 	private String creationdate;
 	private String modificationDate;
 	private String type;
+	
+	
+	public User() {}
+	
+	
 	/**
 	 * @description
 	 * <p>TODO</p>
