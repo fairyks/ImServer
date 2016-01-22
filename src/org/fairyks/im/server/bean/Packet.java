@@ -25,6 +25,7 @@ public class Packet {
 	private String to;
 	private String msgId;
 	private List<User> list;
+	private boolean loginFlag;
 	/**
 	 * @return the type
 	 */
@@ -97,5 +98,16 @@ public class Packet {
 	public void setList(List<User> list) {
 		this.list = list;
 	}
-	
+	/**
+	 * @return the loginFlag
+	 */
+	public boolean isLoginFlag() {
+		return loginFlag;
+	}
+	/**
+	 * @param loginFlag the loginFlag to set
+	 */
+	public void setLoginFlag(boolean loginFlag) {
+		this.loginFlag = loginFlag;
+	}
 }
