@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 public class ConfigReader {
 	
 		public static String is_encrypt="false";
+		public static String encrypt="false";
 		
 		static{
 			is_encrypt=ConfigReader.getValue("config.properties", "IS_ENCRYPT");
